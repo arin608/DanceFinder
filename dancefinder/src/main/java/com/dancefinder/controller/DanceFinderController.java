@@ -4,6 +4,8 @@ package com.dancefinder.controller;
 import com.dancefinder.model.SearchResult;
 import com.dancefinder.service.DanceFinderService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -18,6 +20,10 @@ public class DanceFinderController {
     private final List<SearchResult> searchHistory = new ArrayList<>();
 
     @PostMapping("/search")
+//    public ResponseEntity<?> searchYouTube(@RequestBody SearchQuery searchQuery) {
+//    	return ResponseEntity.ok().body("Search result");
+//    }
+    
     public List<SearchResult> searchDanceVideos(@RequestParam String title, @RequestParam String artist) {
         List<SearchResult> results = danceFinderService.findDanceVideos(title, artist);
         searchHistory.addAll(results); // 검색 결과를 기록에 추가
