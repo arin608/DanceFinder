@@ -14,6 +14,7 @@ function SearchBar() {
         title,
         artist
       });
+      console.log('Search result:', response.data);
       navigate('/results', { state: { results: response.data } });
     } catch (error) {
       console.error('Error searching YouTube:', error);
