@@ -10,9 +10,11 @@ function SearchBar() {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.post(`http://localhost:8080/search`, { // 에러 나는 중
-        "title=" :+ title,
-        "artist=" :+ artist
+      const response = await axios.post('http://localhost:8080/api/danceFinder/search', null, {
+        params: {
+          title,
+          artist
+        }
       });
       console.log('Search result:', response.data);
       navigate('/results', { state: { results: response.data } });
@@ -21,6 +23,20 @@ function SearchBar() {
       console.error('Error searching YouTube:', error);
     }
   };
+  
+  // const handleSearch = async () => {
+  //   try {
+  //     const response = await axios.post(`http://localhost:8080/api/danceFinder/search`, { // 에러 나는 중
+  //       title,
+  //       artist
+  //     });
+  //     console.log('Search result:', response.data);
+  //     navigate('/results', { state: { results: response.data } });
+  //   } 
+  //   catch (error) {
+  //     console.error('Error searching YouTube:', error);
+  //   }
+  // };
 
   return (
     <div>
