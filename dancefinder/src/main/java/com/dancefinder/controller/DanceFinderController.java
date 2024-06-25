@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/danceFinder")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class DanceFinderController {
 
     private final DanceFinderService danceFinderService;
