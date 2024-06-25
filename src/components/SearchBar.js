@@ -10,13 +10,14 @@ function SearchBar() {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.post(`http://localhost:8080/search`, {
-        title,
-        artist
+      const response = await axios.post(`http://localhost:8080/search`, { // 에러 나는 중
+        "title=" :+ title,
+        "artist=" :+ artist
       });
       console.log('Search result:', response.data);
       navigate('/results', { state: { results: response.data } });
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Error searching YouTube:', error);
     }
   };
