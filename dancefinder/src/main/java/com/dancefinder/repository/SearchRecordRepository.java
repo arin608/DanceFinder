@@ -6,3 +6,5 @@ import com.dancefinder.model.SearchRecord;
 public interface SearchRecordRepository extends JpaRepository<SearchRecord, Long>{
 
 }
+
+
