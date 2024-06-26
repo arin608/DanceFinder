@@ -40,6 +40,11 @@ const SearchBar = () => {
     }
   };
 
+  const extractVideoId = (url) => {
+    const urlParams = new URLSearchParams(new URL(url).search);
+    return urlParams.get('v');
+  };
+
   return (
     <div>
       <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" />
@@ -47,8 +52,15 @@ const SearchBar = () => {
       <button onClick={handleSearch}>Search</button>
       {video && (
         <div>
-          <h3>{video.title}</h3>
-          <iframe width="560" height="315" src={`https://www.youtube.com/embed/${video.videoId}`} frameBorder="0" allowFullScreen></iframe>
+          <h3>{video.title} - {video.artist}</h3>
+          <iframe 
+            width="560" 
+            height="315" 
+            src={`https://www.youtube.com/embed/${extractVideoId(video.youtubeLink)}`} 
+            frameBorder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowFullScreen
+          ></iframe>
         </div>
       )}
       <button onClick={fetchSearchHistory}>View Search History</button>
@@ -58,7 +70,14 @@ const SearchBar = () => {
           {searchHistory.map(record => (
             <div key={record.id}>
               <h3>{record.title} - {record.artist}</h3>
-              <iframe width="560" height="315" src={`https://www.youtube.com/embed/${record.youtubeLink}`} frameBorder="0" allowFullScreen></iframe>
+              <iframe 
+                width="560" 
+                height="315" 
+                src={`https://www.youtube.com/embed/${extractVideoId(record.youtubeLink)}`} 
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowFullScreen
+              ></iframe>
               <button onClick={() => deleteRecord(record.id)}>Delete</button>
               {/* Add an edit button here if needed */}
             </div>
