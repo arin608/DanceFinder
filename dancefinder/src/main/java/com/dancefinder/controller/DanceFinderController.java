@@ -11,6 +11,7 @@ import com.dancefinder.repository.SearchRecordRepository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/danceFinder")
@@ -55,6 +56,38 @@ public class DanceFinderController {
     @GetMapping("/searchHistory")
     public List<SearchRecord> getSearchHistory() {
         return searchRecordRepository.findAll();
+    }
+    
+    @PutMapping("/update/{id}")
+    public SearchRecord updateSearchRecord(@PathVariable Long id, @RequestParam String title, @RequestParam String artist) {
+        Optional<SearchRecord> optionalRecord = searchRecordRepository.findById(id);
+        if (optionalRecord.isEmpty()) {
+            throw new RuntimeException("Record not found");
+        }
+
+        SearchRecord existingRecord = optionalRecord.get();
+        existingRecord.setTitle(title);
+        existingRecord.setArtist(artist);
+
+        // 유튜브 링크를 업데이트할 수도 있음
+        String query = title + " " + artist + " official dance performance";
+        String youtubeApiUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=" + query + "&key=" + apiKey + "&maxResults=1";
+
+        RestTemplate restTemplate = new RestTemplate();
+        Map<String, Object> response = restTemplate.getForObject(youtubeApiUrl, Map.class);
+        
+        List<Map<String, Object>> items = (List<Map<String, Object>>) response.get("items");
+        if (!items.isEmpty()) {
+            Map<String, Object> firstItem = items.get(0);
+            Map<String, Object> idMap = (Map<String, Object>) firstItem.get("id");
+            String videoId = (String) idMap.get("videoId");
+
+            existingRecord.setYoutubeLink("https://www.youtube.com/watch?v=" + videoId);
+        }
+
+        searchRecordRepository.save(existingRecord);
+
+        return existingRecord;
     }
 
     @DeleteMapping("/delete/{id}")
