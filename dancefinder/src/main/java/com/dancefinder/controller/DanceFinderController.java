@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import com.dancefinder.model.SearchRecord;
-import com.dancefinder.model.YoutubeResponse;
 import com.dancefinder.repository.SearchRecordRepository;
 
 import java.util.List;
