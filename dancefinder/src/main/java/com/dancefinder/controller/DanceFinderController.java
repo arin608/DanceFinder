@@ -1,60 +1,71 @@
 // DanceFinderController.java
 package com.dancefinder.controller;
 
-import com.dancefinder.model.SearchResult;
-import com.dancefinder.service.DanceFinderService;
-import lombok.RequiredArgsConstructor;
-
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
+import com.dancefinder.model.SearchRecord;
+import com.dancefinder.model.YoutubeResponse;
+import com.dancefinder.repository.SearchRecordRepository;
+
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/danceFinder")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 public class DanceFinderController {
 
-    private final DanceFinderService danceFinderService;
-    private final List<SearchResult> searchHistory = new ArrayList<>();
+    @Autowired
+    private SearchRecordRepository searchRecordRepository;
+    
+    @Value("${youtube.api.key}")
+    private String apiKey;
 
     @PostMapping("/search")
-//    public ResponseEntity<?> searchYouTube(@RequestBody SearchQuery searchQuery) {
-//    	return ResponseEntity.ok().body("Search result");
-//    }
-    
-    public List<SearchResult> searchDanceVideos(@RequestParam String title, @RequestParam String artist) {
-        List<SearchResult> results = danceFinderService.findDanceVideos(title, artist);
-        searchHistory.addAll(results); // 검색 결과를 기록에 추가
-        return results;
-    }
+    public SearchRecord search(@RequestParam String title, @RequestParam String artist) {
+        String query = title + " " + artist + " official dance performance";
 
-    @GetMapping("/history")
-    public List<SearchResult> getSearchHistory() {
-        return searchHistory;
-    }
+        String youtubeApiUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=" + query + "&key=" + apiKey + "&maxResults=1";
 
-    @PutMapping("/history/{index}")
-    public SearchResult updateSearchHistory(@PathVariable int index, @RequestBody SearchResult updatedResult) {
-        if (index >= 0 && index < searchHistory.size()) {
-            searchHistory.set(index, updatedResult);
-            return updatedResult;
-        } else {
-            throw new IllegalArgumentException("Invalid index");
+        RestTemplate restTemplate = new RestTemplate();
+        Map<String, Object> response = restTemplate.getForObject(youtubeApiUrl, Map.class);
+        
+        // API 응답에서 'items'가져오기
+        List<Map<String, Object>> items = (List<Map<String, Object>>) response.get("items");
+        if (items.isEmpty()) {
+            throw new RuntimeException("No video found");
         }
+
+        Map<String, Object> firstItem = items.get(0);
+        Map<String, Object> id = (Map<String, Object>) firstItem.get("id");
+        String videoId = (String) id.get("videoId");
+
+        SearchRecord searchRecord = new SearchRecord();
+        searchRecord.setTitle(title);
+        searchRecord.setArtist(artist);
+        searchRecord.setYoutubeLink("https://www.youtube.com/watch?v=" + videoId);
+
+        searchRecordRepository.save(searchRecord);
+
+        return searchRecord;
     }
 
-    @DeleteMapping("/history/{index}")
-    public void deleteSearchHistory(@PathVariable int index) {
-        if (index >= 0 && index < searchHistory.size()) {
-            searchHistory.remove(index);
-        } else {
-            throw new IllegalArgumentException("Invalid index");
-        }
+    @GetMapping("/searchHistory")
+    public List<SearchRecord> getSearchHistory() {
+        return searchRecordRepository.findAll();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteSearchRecord(@PathVariable Long id) {
+        searchRecordRepository.deleteById(id);
     }
 }
+
+
+
 
 
 

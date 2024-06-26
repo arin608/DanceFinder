@@ -1,4 +1,4 @@
-package com.dancefinder;
+package com.dancefinder.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,7 +12,6 @@ public class SearchRecord {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
 	private String title;
 	private String artist;
 	private String youtubeLink;

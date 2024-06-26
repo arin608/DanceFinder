@@ -17,7 +17,7 @@ public class DanceFinderService {
     private String apiKey;
 
     public List<SearchResult> findDanceVideos(String title, String artist) {
-        String query = title + " " + artist + " dance";
+        String query = title + " " + artist;
         String url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + query + "&type=video&videoCategoryId=17&key=" + apiKey;
 
         RestTemplate restTemplate = new RestTemplate();
