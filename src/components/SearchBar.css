@@ -1,0 +1,63 @@
+/* src/components/SearchBar.css */
+.search-bar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .input-field {
+    margin: 10px 0;
+    padding: 10px;
+    width: 300px;
+    font-size: 16px;
+  }
+  
+  .search-button, .history-button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .search-button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+  }
+  
+  .history-button {
+    background-color: #008CBA; /* Blue */
+    color: white;
+    border: none;
+  }
+  
+  .video-result {
+    margin-top: 20px;
+  }
+  
+  .search-history {
+    margin-top: 20px;
+  }
+  
+  .search-record {
+    margin: 20px 0;
+  }
+  
+  .delete-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+  }
+  
+  .edit-button {
+    background-color: rgb(113, 140, 247);
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+  }
+  
