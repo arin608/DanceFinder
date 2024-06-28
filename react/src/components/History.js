@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import './History.css'
 
 const History = () => {
   const [searchHistory, setSearchHistory] = useState([]);
@@ -51,6 +52,8 @@ const History = () => {
           <button onClick={() => navigate(`/edit/${record.id}`)} className="edit-button">Edit</button>
         </div>
       ))}
+
+      <button onClick={() => navigate('/')} className='back-button'>Back</button>
     </div>
   );
 };
