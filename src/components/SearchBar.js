@@ -64,7 +64,7 @@ const SearchBar = () => {
           ></iframe>
         </div>
       )}
-      <button onClick={fetchSearchHistory} className="history-button">View Search History</button>
+      
       {searchHistory.length > 0 && (
         <div className='search-history'>
           <h2>Search History</h2>
