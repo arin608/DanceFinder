@@ -67,3 +67,4 @@ const EditRecord = () => {
 
 export default EditRecord;
 
+// 깃 테스트
